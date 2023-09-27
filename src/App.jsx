@@ -1,23 +1,23 @@
-import { useRef, useReducer } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Register from './components/Register';
-import CertificateGenerator from './components/CertificateGenrator';
-import Certificate from './components/Certificate';
-import SuccessPage from './components/SuccessPage';
+import { useRef, useReducer } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import Register from "./components/Register";
+import CertificateGenerator from "./components/CertificateGenrator";
+import Certificate from "./components/Certificate";
+import SuccessPage from "./components/SuccessPage";
 function App() {
   const initialState = {
-    name: 'Your Name',
-    course: 'Your Course',
-    dateOfConductStart: '2020-05-20',
-    dateOfConductEnd: '2023-05-20',
-    signature: '',
-    signatureDetails: 'Signature'
+    name: "Your Name",
+    course: "Your Course",
+    dateOfConductStart: "2020-05-20",
+    dateOfConductEnd: "2023-05-20",
+    signature: "",
+    signatureDetails: "Signature",
   };
 
   const reducer = (state, action) => {
     switch (action.type) {
-      case 'TEXT_CHANGE':
+      case "TEXT_CHANGE":
         return { ...state, [action.field]: action.payload };
 
       default:
@@ -31,8 +31,16 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/register" element={<Register />}></Route>
-        <Route path="/generate" element={<CertificateGenerator formState={formState} dispatch={dispatch} />}></Route>
-        <Route path="/generated-certificate" element={<Certificate {...formState} />}></Route>
+        <Route
+          path="/generate"
+          element={
+            <CertificateGenerator formState={formState} dispatch={dispatch} />
+          }
+        ></Route>
+        <Route
+          path="/generated-certificate"
+          element={<Certificate {...formState} />}
+        ></Route>
         <Route path="/addDetails" element={<SuccessPage />}></Route>
       </Routes>
     </Router>
