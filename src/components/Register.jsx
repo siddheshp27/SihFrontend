@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, json } from 'react-router-dom';
 import axios from 'axios';
 
 const Register = () => {
+  const [lgData, setLgData] = useState({ username: '', password: '' });
+
   const registerApi = async (e) => {
     e.preventDefault();
     const res = await axios.post('http://localhost:3000/api/auth/registerUser');
     console.log(res.data.url);
     window.location.href = res.data.url;
+  };
+
+  const changeHandle = (e) => {
+    e.preventDefault();
+    setLgData((prev) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value
+      };
+    });
+  };
+
+  const login = async (e) => {
+    e.preventDefault();
+    const res = await axios.post('http://localhost:3000/api/auth/login', lgData);
+    const data = res.data;
+    // console.log(data.accessToken);
+    localStorage.setItem('acT', data.accessToken);
+    console.log(localStorage.getItem('acT'));
+    sessionStorage.setItem('rfT', data.refreshToken);
+    window.location.href = `http://localhost:5173/${data.userRole}`;
   };
 
   return (
@@ -39,21 +62,23 @@ const Register = () => {
               A secure cloud based platform for storage, sharing and verification of documents & certificates.
             </p>
 
-            <form onSubmit={registerApi} className="mt-8 grid grid-cols-6 gap-6">
+            <form onSubmit={login} className="mt-8 grid grid-cols-6 gap-6">
               <div className="col-span-6">
-                <label for="Email" className="block text-sm font-medium text-gray-700">
-                  Email
+                <label for="UserName" className="block text-sm font-medium text-gray-700">
+                  Username
                 </label>
 
                 <input
-                  type="email"
-                  id="Email"
-                  name="email"
-                  placeholder="Enter valid organizational email"
+                  type="text"
+                  id="UserName"
+                  name="username"
+                  placeholder="Enter valid UserName"
                   className="mt-1 py-4 w-full rounded-sm border-double border-2 border-sky-500 text-gray-700 shadow-sm placeholder:bold text-sm px-2 placeholder:text-slate-400"
+                  onChange={changeHandle}
+                  value={lgData.username}
                 />
               </div>
-              <div className="col-span-6 sm:col-span-3">
+              <div className="col-span-6 ">
                 <label for="Password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
@@ -64,26 +89,18 @@ const Register = () => {
                   name="password"
                   placeholder="Enter valid password"
                   className="mt-1 py-4 w-full rounded-sm border-double border-2 border-sky-500 text-gray-700 shadow-sm placeholder:bold text-sm px-2 placeholder:text-slate-400"
+                  onChange={changeHandle}
+                  value={lgData.password}
                 />
               </div>
-              <div className="col-span-6 sm:col-span-3">
-                <label for="PasswordConfirmation" className="block text-sm font-medium text-gray-700">
-                  Password Confirmation
-                </label>
 
-                <input
-                  type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
-                  placeholder="Re-enter your password"
-                  className="mt-1 py-4 w-full rounded-sm border-double border-2 border-sky-500 text-gray-700 shadow-sm placeholder:bold text-sm px-2 placeholder:text-slate-400"
-                />
-              </div>
               <div className="col-span-6 flex items-center flex-row justify-between">
                 <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
                   Login
                 </button>
               </div>
+            </form>
+            <form onSubmit={registerApi}>
               <div className="col-span-4 flex items-center flex-row justify-start">
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">Don't have an account?</p>
                 <button className="ml-2 text-sm text-gray-700 underline">Register via Digilocker</button>.
