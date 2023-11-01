@@ -3,22 +3,23 @@ import axios from 'axios';
 
 export default function Admin() {
   const [orgData, setOrgData] = useState({ orgId: '', orgName: '', email: '', password: '', address: '', phoneNumber: '' });
-  const accessToken = localStorage.getItem('acT');
-  console.log(accessToken);
+  // console.log(accessToken);
 
   const register = (e) => {
     e.preventDefault();
-    const refreshToken = sessionStorage.getItem('rfT');
+    const accessToken = localStorage.getItem('acT'); // Assuming 'rfT' holds the access token
     console.log(accessToken);
-    const headers = { accessToken: accessToken };
-    // console.l
-    // axios.post('http://localhost:3000/api/auth/registerOrg', orgData, headers);
+
+    // Set the token in the Authorization header as "Bearer YOUR_TOKEN"
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
     axios({
       method: 'post',
       headers: headers,
       url: 'http://localhost:3000/api/auth/registerOrg',
       data: orgData
     });
+
     console.log(orgData);
   };
 
